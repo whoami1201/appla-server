@@ -16,7 +16,7 @@ io.on('connection', function(socket){
   socket.on('disconnect', function(){
     connection_count -= 1
     console.log('user disconnected');
-    onsole.log('Connections: ' + connection_count);
+    console.log('Connections: ' + connection_count);
   });
 
   socket.on('chat message', function(msg) {
