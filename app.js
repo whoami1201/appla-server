@@ -11,19 +11,23 @@ var connection_count = 0
 io.on('connection', function(socket){
   connection_count += 1
   console.log('user connected');
+  console.log('Connections: ' + connection_count);
+
   socket.on('disconnect', function(){
     connection_count -= 1
     console.log('user disconnected');
+    onsole.log('Connections: ' + connection_count);
   });
 
   socket.on('chat message', function(msg) {
     io.emit('chat message', msg);
   });
 
-  console.log('Connections: ' + connection_count);
 })
 
 
-http.listen(process.env.PORT, function(){
-  console.log("Server listening...");
+http.listen(3000, function(){
+  var host = http.address().address
+  var port = http.address().port
+  console.log("Server listening at http://%s:%s", host, port);
 })
