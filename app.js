@@ -8,9 +8,10 @@ app.get('/', function(req, res) {
 
 var connection_count = 0;
 var numUsers = 0;
-var addedUser = false;
 
 io.on('connection', function(socket){
+  var addedUser = false;
+  
   connection_count += 1
   console.log('user connected');
   console.log('Connections: ' + connection_count);
