@@ -6,7 +6,9 @@ app.get('/', function(req, res) {
   res.sendFile(__dirname + '/index.html');
 });
 
-var connection_count = 0
+var connection_count = 0;
+var numUsers = 0;
+var addedUser = false;
 
 io.on('connection', function(socket){
   connection_count += 1
@@ -21,6 +23,23 @@ io.on('connection', function(socket){
 
   socket.on('chat message', function(msg) {
     io.emit('chat message', msg);
+  });
+
+  socket.on('add user', function (username) {
+    if (addedUser) return;
+
+    // we store the username in the socket session for this client
+    socket.username = username;
+    ++numUsers;
+    addedUser = true;
+    socket.emit('login', {
+      numUsers: numUsers
+    });
+    // echo globally (all clients) that a person has connected
+    socket.broadcast.emit('user joined', {
+      username: socket.username,
+      numUsers: numUsers
+    });
   });
 
 })
