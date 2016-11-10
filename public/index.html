@@ -14,45 +14,15 @@
     </style>
   </head>
   <body>
+    <form action="" id="login">
+      <input id="username" autocomplete="off" /><button>Login</button>
+    </form> 
     <ul id="messages"></ul>
-    <form action="">
+    <form action="" id="chat">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-    <script>
-      var socket = io();
-
-      function log (message, username="") {
-        var $el = $('<li>').text(username + " said: " + message);
-        $("#messages").append($el);
-      }
-
-      function addParticipantsMessage (data) {
-        var message = '';
-        if (data.numUsers === 1) {
-          message += "there's 1 participant";
-        } else {
-          message += "there are " + data.numUsers + " participants";
-        }
-        log(message);
-      };
-
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
-
-      socket.on('chat message', function(data){
-        log(data.message, data.username);
-      });
-
-      // Whenever the server emits 'user joined', log it in the chat body
-      socket.on('user joined', function (data) {
-        log(data.username + ' joined');
-        addParticipantsMessage(data);
-      });
-    </script>
+    <script src="libs/socket.js"></script>
   </body>
 </html>

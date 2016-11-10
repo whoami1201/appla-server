@@ -32,15 +32,9 @@ var Message = require('./models/Message.js');
 
 io.on('connection', function(socket){
   var addedUser = false;
-  
-  connection_count += 1
-  console.log('user connected');
-  console.log('Connections: ' + connection_count);
 
   socket.on('disconnect', function(){
-    connection_count -= 1
-    console.log('user disconnected');
-    console.log('Connections: ' + connection_count);
+    --numUsers;
   });
 
   socket.on('chat message', function(msg) {
