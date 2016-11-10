@@ -34,7 +34,7 @@ io.on('connection', function(socket){
   var addedUser = false;
 
   socket.on('disconnect', function(){
-    --numUsers;
+    numUsers--;
   });
 
   socket.on('chat message', function(msg) {
@@ -59,7 +59,7 @@ io.on('connection', function(socket){
       socket.username = username;
     else 
       socket.username = 'annonymous'
-    ++numUsers;
+    numUsers++;
     addedUser = true;
     socket.emit('login', {
       numUsers: numUsers
