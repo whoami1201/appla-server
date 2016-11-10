@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "socket app",
   "dependencies": {
+    "body-parser": "^1.15.2",
     "express": "^4.10.2",
+    "mongodb": "^2.2.11",
+    "mongoose": "^4.6.6",
     "socket.io": "^1.5.1"
   }
 }
