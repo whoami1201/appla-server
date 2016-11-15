@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var jwt        = require('jwt-simple');
 var validator  = require('express-validator');
 
-var Constants = require('./config/Constants');
+var Constants = require('./config/constants');
 
 var router = require('./router');
 var socket = require('./socket');
