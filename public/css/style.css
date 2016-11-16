@@ -7,9 +7,10 @@ body {
 }
 #messageList { 
   list-style-type: none; 
-  padding: 40px 20px;
-  height: calc(100% - 50px);
-  overflow-x: scroll;
+  height: calc(100% - 80px);
+  overflow-y: scroll;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .topBg {
@@ -50,12 +51,12 @@ body {
 .title {
   position: absolute;
   right: 21%;
-  top: 45px;
+  top: 25px;
   font-size: 35px;
   color: rgba(255,255,255,0.87);
 }
 .container {
-  top: 100px; bottom: 100px;
+  top: 70px; bottom: 30px;
   left: 20%; right: 20%;
   background: #FAFAFA;
   position: absolute;
@@ -79,6 +80,7 @@ body {
   width: calc(100% - 50px);
   padding-left: 10px;
   border-bottom: 1px solid rgba(0,0,0,0.12);
+  background: rgba(255,255,255,0);
 }
 
 .chatbox input:focus, .chatbox input:hover {
@@ -89,7 +91,6 @@ body {
 }
 
 .sendBtn {
-  /* put the height and width of your image here */
   height: 20px;
   width: 20px;
   border: none;
