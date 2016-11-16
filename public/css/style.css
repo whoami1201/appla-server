@@ -99,7 +99,19 @@ body {
   margin-left: 10px;
 }
 
-.sendBtn span {
-  display: none;
+@media (max-width: 480px) {
+  .container {
+    top: 50px; left: 0; right: 0; bottom: 0px;
+  }
+
+  #messageList {
+    padding: 10px 10px;
+  }
+
+  .title {
+    right: 10%;
+    top: 15px;
+    font-size: 20px;
+  }
 }
 
