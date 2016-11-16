@@ -9,13 +9,6 @@ var io = require('socket.io');
 exports.connect = function(server){
     io = io.listen(server, {});
 
-    /**
-     * Every time someone else connect, io will handle the hand shake
-     * to get the token and user's authentication
-     * Save all connected socket in one object which the key is userId
-     * Eg: Sockets { userId : [devices] }
-     */
-
     var connection_count = 0;
     var numUsers = 0;
 
@@ -54,7 +47,6 @@ exports.connect = function(server){
           socket.username = username;
         else 
           socket.username = 'annonymous'
-        numUsers++;
         addedUser = true;
         socket.emit('login', {
           numUsers: numUsers

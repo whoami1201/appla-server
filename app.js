@@ -19,7 +19,7 @@ mongoose.Promise = global.Promise;
 
 // connect to MongoDB
 mongoose.connect(Constants.database)
-  .then(() =>  console.log('connection succesful'))
+  .then(() =>  console.log('connection successful'))
   .catch((err) => console.error(err));
 
 app.use(bodyParser.json());

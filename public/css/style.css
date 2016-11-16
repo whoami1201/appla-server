@@ -1,0 +1,105 @@
+* { margin: 0; padding: 0; box-sizing: border-box; 
+  font-family: 'Roboto', sans-serif; 
+}
+body { 
+  background: rgba(0,0,0,0.08);
+  color: rgba(0,0,0,0.54);
+}
+#messageList { 
+  list-style-type: none; 
+  padding: 40px 20px;
+  height: calc(100% - 50px);
+  overflow-x: scroll;
+}
+
+.topBg {
+  background: #FF7043;
+  position: absolute;
+  height: 35%;
+  width: 100%;
+  z-index: -100;
+}
+
+.messageWrapper {
+  max-width: 50%;
+  padding: 10px;
+}
+
+.messageWrapper > .msg, .messageWrapper > .log {
+  min-width: 25%;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  color: #FAFAFA;
+  display: inline-block;
+}
+
+.messageWrapper > .msg {
+  background: #2196F3;
+}
+
+.messageWrapper > .log {
+  background: #BF360C;
+}
+
+.messageWrapper > .username {
+  padding-bottom: 5px;
+  color: rgba(0,0,0,0.84);
+  font-size: 17px;
+}
+
+.title {
+  position: absolute;
+  right: 21%;
+  top: 45px;
+  font-size: 35px;
+  color: rgba(255,255,255,0.87);
+}
+.container {
+  top: 100px; bottom: 100px;
+  left: 20%; right: 20%;
+  background: #FAFAFA;
+  position: absolute;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.chatbox { 
+  display: block;
+  border-top: 1px solid rgba(0,0,0,0.12);
+  padding: 5px 10px; 
+  position: absolute; 
+  height: 40px;
+  bottom: 0; 
+  width: 100%; 
+}
+
+.chatbox input {
+  border: none;
+  font-size: 14px;
+  height: 100%;
+  width: calc(100% - 50px);
+  padding-left: 10px;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.chatbox input:focus, .chatbox input:hover {
+  outline: none;
+  border-bottom: 1px solid #FF5722;
+  transition: border-bottom 0.2s;
+  -webkit-transition: border-bottom 0.7s;
+}
+
+.sendBtn {
+  /* put the height and width of your image here */
+  height: 20px;
+  width: 20px;
+  border: none;
+  background: none;
+  font-size: 15px;
+  color: #FF5722;
+  margin-left: 10px;
+}
+
+.sendBtn span {
+  display: none;
+}
+

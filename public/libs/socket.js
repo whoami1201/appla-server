@@ -1,19 +1,11 @@
 var socket = io();
 
-function log (message, username="") {
-  var $el = $('<li>').text(username + " said: " + message);
-  $("#messages").append($el);
+function log(message, username="Anonymous", tag="msg") {
+  var $messageWrapper = $('<div>').append($('<li>').text(username).addClass("username"));
+  $messageWrapper.append($('<li>').text(message).addClass(tag));
+  $("#messageList").append($messageWrapper.addClass("messageWrapper"));
+  $('#messageList').animate({ scrollTop: $("#messageList")[0].scrollHeight}, 500);
 }
-
-function addParticipantsMessage (data) {
-  var message = '';
-  if (data.numUsers === 1) {
-    message += "there's 1 participant";
-  } else {
-    message += "there are " + data.numUsers + " participants";
-  }
-  log(message);
-};
 
 $('form').submit(function(){
   socket.emit('chat message', $('#m').val());
@@ -27,6 +19,5 @@ socket.on('chat message', function(data){
 
 // Whenever the server emits 'user joined', log it in the chat body
 socket.on('user joined', function (data) {
-  log(data.username + ' joined');
-  addParticipantsMessage(data);
+  log(data.username + ' joined!', "", "log");
 });
