@@ -1,7 +1,5 @@
 var io = require('socket.io');
 
-
-
 /**
  * Connect and handling event coming
  * @param server
