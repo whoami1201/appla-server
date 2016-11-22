@@ -1,6 +1,5 @@
 var express    = require('express');
 var bodyParser = require('body-parser');
-var validator  = require('express-validator');
 
 var Constants = require('./config/constants');
 
