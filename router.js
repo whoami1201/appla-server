@@ -1,34 +1,44 @@
 var express = require('express');
 var router = express.Router();
 
-// var userController = require('./controllers/userController');
-var messageController = require('./controllers/messageController');
-var authController = require('./controllers/authController');
+var userCtrl = require('./controllers/userCtrl');
+var messageCtrl = require('./controllers/messageCtrl');
+var authCtrl = require('./controllers/authCtrl');
+var roomCtrl = require('./controllers/roomCtrl');
 
 
 // set headers to allow cross domain request
-router.use(authController.headerAllow);
-router.options('/*', authController.setHeader);
+router.use(authCtrl.headerAllow);
+router.options('/*', authCtrl.setHeader);
 
 /***************************** APIs **********************************/
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+router.post('/register', authCtrl.register);
+router.post('/login', authCtrl.login);
 
 /*
  * Authentication middle ware
  * Checking token on request header
  * Those api which need authorization will be placed below this
  */
-router.use(authController.authorize);
+router.use(authCtrl.authorize);
 
 /*
 * Routes that can be accessed only by authenticated users
 */
-router.get('/messages', messageController.getAll);
-router.get('/messages/:id', messageController.getOne);
-router.post('/messages/', messageController.create);
-router.put('/messages/:id', messageController.update);
-router.delete('/messages/:id', messageController.delete);
+router.get('/users', userCtrl.getAll);
+
+router.get('/messages', messageCtrl.getAll);
+router.get('/messages/:msgId', messageCtrl.getOne);
+router.post('/messages/', messageCtrl.create);
+router.put('/messages/:msgId', messageCtrl.update);
+router.delete('/messages/:msgId', messageCtrl.delete);
+
+router.get('/rooms', roomCtrl.getAll);
+router.get('/rooms/:roomSlug', roomCtrl.getOne);
+router.post('/rooms', roomCtrl.create);
+router.put('/rooms/:roomSlug/join', roomCtrl.update);
+router.delete('/rooms/:roomSlug', roomCtrl.delete);
+
 
 module.exports = router;

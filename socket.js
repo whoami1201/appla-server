@@ -7,7 +7,6 @@ var io = require('socket.io');
 exports.connect = function(server){
     io = io.listen(server, {});
 
-    var connection_count = 0;
     var numUsers = 0;
 
     var Message = require('./models/Message.js');
@@ -44,7 +43,7 @@ exports.connect = function(server){
         if (username!="")
           socket.username = username;
         else 
-          socket.username = 'annonymous'
+          socket.username = 'annonymous';
         addedUser = true;
         socket.emit('login', {
           numUsers: numUsers
