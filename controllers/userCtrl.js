@@ -1,4 +1,6 @@
+var jwt = require('jsonwebtoken');
 var User = require('../models/User.js');
+var Constants = require('../config/constants');
 
 var users = {
 
@@ -41,6 +43,30 @@ var users = {
             if (err) return next(err);
             res.json(post);
         });
+    },
+
+    isSignedIn: function(req, res) {
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+        // decode token
+        if (token) {
+            // verifies secret and checks exp
+            jwt.verify(token, Constants.secret, function (err, decoded) {
+                if (err) {
+                    return res.json({ success: false, message: 'Failed to authenticate token.'});
+                } else {
+                    return res.json({ success: true, message: "User is signed in."});
+                }
+            });
+
+        } else {
+            // if there is no token
+            // return an error
+            return res.status(403).send({
+                success: false,
+                message: 'No token provided.'
+            });
+        }
     }
 };
 

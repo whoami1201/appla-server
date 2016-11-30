@@ -1,0 +1,26 @@
+<div class="container">
+    <div class="row">
+        <div class="col offset-m3 m6 s12">
+            <div class="card grey lighten-5 card-login">
+                <div class="card-content black-text">
+                    <span class="card-title">AppLa</span>
+                    <form name="loginForm" ng-submit="signIn(credentials)" novalidate>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="username" type="text" class="validate" ng-model="credentials.username">
+                                <label for="username">User Name</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="input-field col s12">
+                                <input id="password" type="password" class="validate" ng-model="credentials.password">
+                                <label for="password">Password</label>
+                            </div>
+                        </div>
+                        <button class="btn waves-effect waves-light" type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

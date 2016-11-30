@@ -1,24 +1,39 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html ng-app="app">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="UTF-8">
+    <base href="/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AppLa</title>
-    <link rel="shortcut icon" type="image" href="img/favicon.ico"/>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.png" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+    <link href="bower_components/materialize/dist/css/materialize.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
-<body>
-<div class="title">AppLa</div>
-<div class="topBg"></div>
-<div class="container">
-    <ul id="messageList"></ul>
-    <form action="" id="chat" class="chatbox">
-        <input id="m" autocomplete="off" placeholder="Type your message here.."/>
-        <button class="sendBtn">Send</button>
-    </form>
-</div>
-<script src="/socket.io/socket.io.js"></script>
-<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
-<script src="libs/socket.js"></script>
+<body ng-cloak>
+<div ui-view></div>
+
+<!-- JS libraries -->
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/materialize/dist/js/materialize.min.js"></script>
+
+<!-- App modules -->
+<script type="text/javascript" src="modules/app.module.js"></script>
+<script type="text/javascript" src="modules/app.route.js"></script>
+
+<!-- Authentication modules -->
+<script type="text/javascript" src="modules/auth/auth.module.js"></script>
+<script type="text/javascript" src="modules/auth/auth.controller.js"></script>
+<script type="text/javascript" src="modules/auth/auth.service.js"></script>
+<script type="text/javascript" src="modules/auth/auth.directive.js"></script>
+
+<!-- Home modules -->
+<script type="text/javascript" src="modules/home/home.module.js"></script>
+<script type="text/javascript" src="modules/home/home.controller.js"></script>
+<script type="text/javascript" src="modules/home/home.service.js"></script>
+<script type="text/javascript" src="modules/home/home.directive.js"></script>
 </body>
 </html>

@@ -1,0 +1,16 @@
+<div class="item-content" ng-click="toggleMessageShow()" ng-hide="isMessageShow">
+  <div class="row">
+    <div class="item-from col-4 hide-overflow-text">{{message.from}}</div>
+    <div class="item-subject col-8 hide-overflow-text">{{message.subject}}</div>
+  </div>
+  <div class="row">
+    <div class="item-date col-5">{{message.date | amDateFormat:'D MMM'}}</div>
+  </div>
+</div>
+<div class="content-card-head" ng-click="toggleMessageShow()" ng-show="isMessageShow">
+  <div class="item-from">{{message.from}}</div>
+  <div class="item-subject hide-overflow-text">{{message.subject}}</div>  
+</div>
+<div class="content-card" ng-show="isMessageShow">
+  <div ng-bind-html="message.body"></div>
+</div>

@@ -16,6 +16,8 @@ router.options('/*', authCtrl.setHeader);
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 
+router.get('/users/isSignedIn', userCtrl.isSignedIn);
+
 /*
  * Authentication middle ware
  * Checking token on request header
@@ -23,10 +25,11 @@ router.post('/login', authCtrl.login);
  */
 router.use(authCtrl.authorize);
 
+
+
 /*
 * Routes that can be accessed only by authenticated users
 */
-router.get('/users', userCtrl.getAll);
 
 router.get('/messages', messageCtrl.getAll);
 router.get('/messages/:msgId', messageCtrl.getOne);

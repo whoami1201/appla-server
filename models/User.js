@@ -1,56 +1,48 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var bcrypt = require('bcrypt');
-var moment = require('moment');
+'use strict';
 
-var UserSchema = new Schema({
-    username: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    first_name: {
-        type: String,
-        required: true
-    },
-    last_name: {
-        type: String,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true
-    },
-    created_at: {type: Number, default: moment().unix() }
-});
+var userModel = require('../database').models.user;
 
-UserSchema.pre('save', function (next) {
-    var user = this;
-    if (this.isModified('password') || this.isNew) {
-        bcrypt.genSalt(10, function (err, salt) {
-            if (err) {
-                return next(err);
-            }
-            bcrypt.hash(user.password, salt, function (err, hash) {
+var user = {
+    create: function(data, callback) {
+      var newUser = new userModel(data);
+      newUser.save(callback);
+    },
+    findOne: function(data, callback) {
+        userModel.findOne(data, callback);
+    },
+    findById: function(id, callback) {
+        userModel.findById(id, callback);
+    },
+
+    isSignedIn: function(data, callback) {
+        // check header or url parameters or post parameters for token
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
+
+        // decode token
+        if (token) {
+            // verifies secret and checks exp
+            jwt.verify(token, Constants.secret, function (err, decoded) {
                 if (err) {
-                    return next(err);
+                    return res.json({success: false, message: 'Failed to authenticate token.'});
+                } else {
+                    // if everything is good, save to request for use in other routes
+                    req.decoded = decoded;
+                    next();
                 }
-                user.password = hash;
-                next();
             });
-        });
-    } else {
-        return next();
-    }
-});
 
-UserSchema.methods.comparePassword = function (passw, cb) {
-    bcrypt.compare(passw, this.password, function (err, isMatch) {
-        if (err) {
-            return cb(err);
+        } else {
+
+            // if there is no token
+            // return an error
+            return res.status(403).send({
+                success: false,
+                message: 'No token provided.'
+            });
         }
-        cb(null, isMatch);
-    });
+    }
 };
 
-module.exports = mongoose.model('User', UserSchema);
+
+
+module.exports = user;

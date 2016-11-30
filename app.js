@@ -1,6 +1,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
+var path = require('path');
 
 var Constants = require('./config/constants');
 
@@ -10,23 +11,24 @@ var socket = require('./socket');
 var app = express();
 var http = require('http').Server(app);
 
-// load mongoose package
-var mongoose = require('mongoose');
-
-// Use native Node promises
-mongoose.Promise = global.Promise;
-
-// connect to MongoDB
-mongoose.connect(Constants.database)
-    .then(function() { console.log("connection successful") })
-    .catch(function(err) { console.error(err)});
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(expressValidator()); // this line must be immediately after express.bodyParser()!
 
-app.use('/', express.static(__dirname + '/public'));
 app.use('/api/', router);
+
+app.use('/libs', express.static(__dirname + '/public/libs'));
+app.use('/bower_components', express.static(__dirname + '/public/bower_components'));
+app.use('/css', express.static(__dirname + '/public/css'));
+app.use('/img', express.static(__dirname + '/public/img'));
+app.use('/modules', express.static(__dirname + '/public/modules'));
+app.use('/templates', express.static(__dirname + '/public/templates'));
+
+app.all('/*', function(req, res, next) {
+    // Just send the index.html for other files to support HTML5Mode
+    res.sendFile('index.html', { root: __dirname + '/public' });
+});
+
 
 // Handle 404 error.
 // The last middleware.

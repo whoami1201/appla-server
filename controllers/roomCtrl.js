@@ -27,7 +27,7 @@ var rooms = {
      * @param res
      */
     getOne: function (req, res) {
-        Room.getRoomWithMessages( req.params.roomSlug, function (err, room) {
+        Room.findOne( { slug: req.params.roomSlug }, function (err, room) {
             if (err)
                 return res.json({success: false, message: err });
             else
