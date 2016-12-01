@@ -93,17 +93,18 @@ auth = {
             return;
         }
 
-        var newUser = new User({
-            username: req.body.username,
-            password: req.body.password,
+        var user = {
+            last_name: req.body.lastName,
             first_name: req.body.firstName,
-            last_name: req.body.lastName
-        });
+            username: req.body.username,
+            password: req.body.password
+        };
 
         // save the user
-        newUser.save(function (err) {
+        User.create( user, function (err) {
             if (err) {
-                return res.json({success: false, msg: "USER_ALREADY_EXISTED"});
+                console.log(err);
+                return res.json({success: false, msg: "ERROR_CREATE_USER" });
             }
             res.json({success: true});
         })
@@ -132,7 +133,7 @@ auth = {
                         });
                         res.json({success: true, token: token});
                     } else {
-                        res.send({success: true, msg: 'Authentication failed. Wrong password.'});
+                        res.send({success: false, msg: 'Authentication failed. Wrong password.'});
                     }
                 })
             }

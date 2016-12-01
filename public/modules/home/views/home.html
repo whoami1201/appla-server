@@ -1,2 +1,14 @@
-HOME
-<a class="waves-effect waves-light btn" ng-click="signOut()">Sign Out</a>
+<nav>
+    <div class="nav-wrapper blue darken-2">
+        <a href="#" class="brand-logo center">AppLa</a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul class="right hide-on-med-and-down">
+            <li><a href="#">Rooms</a></li>
+            <li><a class="waves-effect waves-light btn red lighten-2" ng-click="signOut()">Sign Out</a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li><a href="#">Rooms</a></li>
+            <li><a href="#" ng-click="signOut()">Sign Out</a></li>
+        </ul>
+    </div>
+</nav>

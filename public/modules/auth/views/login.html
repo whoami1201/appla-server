@@ -4,24 +4,82 @@
             <div class="card grey lighten-5 card-login">
                 <div class="card-content black-text">
                     <div class="container">
-                        <span class="card-title">AppLa Login Portal</span>
-                        <form name="loginForm" ng-submit="signIn(credentials)" novalidate>
+                        <span class="card-title">AppLa</span>
+                        <form name="loginForm" ng-submit="signIn()" validate>
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <input id="username" type="text" class="validate" ng-model="credentials.username">
-                                        <label for="username">User Name</label>
+                                        <input id="username"
+                                               type="text"
+                                               class="validate"
+                                               minlength="3"
+                                               maxlength="15"
+                                               ng-model="credentials.username"
+                                               required>
+                                        <label for="username">Username</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <input id="password" type="password" class="validate" ng-model="credentials.password">
-                                        <label for="password">Password</label>
+                                        <input id="password"
+                                               type="password"
+                                               class="validate"
+                                               minlength="6"
+                                               maxlength="20"
+                                               ng-model="credentials.password"
+                                               required="">
+                                        <label for="password" >Password</label>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <button class="btn waves-effect waves-light col s12" type="submit">Login</button>
                                 </div>
                         </form>
+                        <div class="row center-align">
+                            <div class="col s12 red-text text-lighten-1" ng-show="signInValidationMessage.length > 0">{{ signInValidationMessage }}</div>
+                        </div>
+                        <div class="row center-align">
+                            <a href="#" class="activator">Doesn't have an account? Sign up here.</a>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="card-reveal">
+                    <span class="card-title grey-text text-darken-4">Signing Up<i class="material-icons right">close</i></span>
+                    <div class="row">
+                        <form name="signupForm" ng-submit="signUp(signUpData)" validate>
+                            <div class="input-field col s6">
+                                <input id="firstName" type="text" class="validate" ng-model="signUpData.firstName" required>
+                                <label for="firstName">First Name</label>
+                            </div>
+                            <div class="input-field col s6">
+                                <input id="lastName" type="text" class="validate" ng-model="signUpData.lastName" required>
+                                <label for="lastName">Last Name</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <input id="signUpUsername"
+                                       type="text"
+                                       class="validate"
+                                       ng-model="signUpData.username"
+                                       minlength="3"
+                                       maxlength="15"
+                                       required>
+                                <label for="signUpUsername">Username</label>
+                            </div>
+                            <div class="input-field col s12">
+                                <input id="signUpPassword"
+                                       type="password"
+                                       class="validate"
+                                       minlength="6"
+                                       maxlength="20"
+                                       ng-model="signUpData.password"
+                                       required>
+                                <label for="signUpPassword">Password</label>
+                            </div>
+                            <button class="btn waves-effect waves-light col s12" type="submit">Submit</button>
+                        </form>
+                    </div>
+                    <div class="row center-align">
+                        <div class="col s12 teal-text" ng-show="signUpValidationMessage.length > 0">{{ signUpValidationMessage }}</div>
                     </div>
                 </div>
             </div>

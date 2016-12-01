@@ -45,6 +45,25 @@ var users = {
         });
     },
 
+
+
+    /** GET users/checkUserExist/:username
+     *
+     * @param req
+     * @param res
+     */
+    checkUserExist: function(req,res) {
+        var username = req.params.username;
+        User.findOne( { username: username }, function(err, user) {
+            setTimeout(function(){
+                var ok = !(user || err);
+                res.status( ok ? 200 : 400 ).json({
+                    userExists : ok
+                });
+            }, 500);
+        })
+    },
+
     isSignedIn: function(req, res) {
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -67,7 +86,8 @@ var users = {
                 message: 'No token provided.'
             });
         }
-    }
+    },
+
 };
 
 module.exports = users;

@@ -16,6 +16,7 @@ router.options('/*', authCtrl.setHeader);
 router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 
+router.get('/users/checkUserExists/:username', userCtrl.checkUserExist);
 router.get('/users/isSignedIn', userCtrl.isSignedIn);
 
 /*
@@ -24,8 +25,6 @@ router.get('/users/isSignedIn', userCtrl.isSignedIn);
  * Those api which need authorization will be placed below this
  */
 router.use(authCtrl.authorize);
-
-
 
 /*
 * Routes that can be accessed only by authenticated users

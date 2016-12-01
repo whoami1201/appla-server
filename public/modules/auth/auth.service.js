@@ -8,24 +8,25 @@ function AuthService($state, $timeout, $http, $q, $window) {
     AuthService.signIn = signIn;
     AuthService.signOut = signOut;
     AuthService.verifyUser = verifyUser;
+    AuthService.signUp = signUp;
     AuthService.signedIn = false;
 
-    /*
+    /**
      * SIGN IN
      */
     function signIn(credentials) {
-        return $http
-            .post('/api/login', credentials)
-            .then(function (res) {
-                if (res.data.token != null) {
-                    AuthService.signedIn = true;
-                    $window.localStorage.accessToken = res.data.token;
-                    $state.go('home');
-                } else {
-                    return;
-                }
-            });
+        return $http.post('/api/login', credentials);
     }
+
+    /**
+     * SIGN UP
+     * @param data
+     * @returns {*}
+     */
+    function signUp(data) {
+        return $http.post('/api/register', data);
+    }
+
 
 
     /*

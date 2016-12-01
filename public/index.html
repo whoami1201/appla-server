@@ -11,14 +11,23 @@
     <link href="bower_components/materialize/dist/css/materialize.min.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="css/style.css" type="text/css">
 </head>
-<body ng-cloak>
+<body ng-cloak class="grey lighten-3">
 <div ui-view></div>
 
+
+
 <!-- JS libraries -->
-<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="bower_components/materialize/dist/js/materialize.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        $(".button-collapse").sideNav();
+    });
+</script>
 
 <!-- App modules -->
 <script type="text/javascript" src="modules/app.module.js"></script>
@@ -35,5 +44,6 @@
 <script type="text/javascript" src="modules/home/home.controller.js"></script>
 <script type="text/javascript" src="modules/home/home.service.js"></script>
 <script type="text/javascript" src="modules/home/home.directive.js"></script>
+
 </body>
 </html>
