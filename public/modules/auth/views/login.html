@@ -35,6 +35,10 @@
                                 </div>
                         </form>
                         <div class="row center-align">
+                            <div class="col s12">
+                                <input type="checkbox" id="remember_me" ng-model="rememberMe"/>
+                                <label for="remember_me">Remember me</label>
+                            </div>
                             <div class="col s12 red-text text-lighten-1" ng-show="signInValidationMessage.length > 0">{{ signInValidationMessage }}</div>
                         </div>
                         <div class="row center-align">

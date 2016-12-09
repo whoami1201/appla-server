@@ -1,0 +1,24 @@
+<li class="divider"></li>
+<li class="collection-item room-item-link">
+    <div class="row" style="margin-top: 15px;">
+        <div ng-click="joinRoom(room._id)">
+            <div class="row">
+                <div class="col s3">
+                    <span class="red-text text-darken-4 title">{{room.room_name}}</span>
+                </div>
+                <div class="grey-text col offset-s5 s4">
+                    {{ room.created_at  | amFromUnix | amDateFormat:'HH:mm - DD MMM, YYYY'}}
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s8">
+                <div class="grey-text text-darken-2 description truncate">{{room.description}}</div>
+            </div>
+            <div class="col s4 " ng-show="room.owner_id == user.user_id">
+                <a href="#" class="remove-room red-text text-lighten-2" ng-click="deleteRoom(room._id)">Remove</a>
+            </div>
+        </div>
+
+    </div>
+</li>

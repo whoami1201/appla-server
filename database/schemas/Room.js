@@ -6,8 +6,7 @@ var slugify = require('lackey-mongoose-slugify');
 var RoomSchema = new mongoose.Schema({
     room_name: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     owner_id: Schema.Types.ObjectId,
     connections: [{
@@ -19,7 +18,8 @@ var RoomSchema = new mongoose.Schema({
         default: ""
     },
     slug: String,
-    created_at: {type: Number, default: moment().unix() }
+    created_at: {type: Number, default: moment().unix() },
+    sync_deleted: Number
 });
 
 RoomSchema.plugin(slugify, {

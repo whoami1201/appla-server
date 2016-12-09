@@ -11,11 +11,11 @@ var rooms = {
      * @param res
      */
     getAll: function (req, res) {
-        Room.find(function (err, rooms) {
+        Room.find({ sync_deleted: { $exists: false }},function (err, rooms) {
             if (err)
                 return res.json({success: false, message: "ROOM_GET_ALL_ERROR"});
             else
-                return res.json({success: true, data: rooms});
+                return res.json({success: true, rooms: rooms});
         });
     },
 
@@ -31,7 +31,7 @@ var rooms = {
             if (err)
                 return res.json({success: false, message: err });
             else
-                return res.json({success: true, data: room});
+                return res.json({success: true, room: room});
         });
     },
 
@@ -52,7 +52,8 @@ var rooms = {
             room_name: req.body.roomName,
             description: req.body.description,
             owner_id: req.decoded.userId,
-            users: [req.decoded.userId]
+            users: [req.decoded.userId],
+            created_at: moment().unix()
         };
 
         if (errors) {
@@ -61,10 +62,12 @@ var rooms = {
         }
 
         Room.create(room, function (err, result) {
-            if (err)
-                return res.json({success: false, message: "ROOM_ALREADY_EXISTED"});
-            else
+            if (err) {
+                return res.json({success: false, message: "ERROR_CREATE_ROOM"});
+            }
+            else {
                 return res.json({success: true, data: result});
+            }
         });
     },
 

@@ -45,25 +45,6 @@ var users = {
         });
     },
 
-
-
-    /** GET users/checkUserExist/:username
-     *
-     * @param req
-     * @param res
-     */
-    checkUserExist: function(req,res) {
-        var username = req.params.username;
-        User.findOne( { username: username }, function(err, user) {
-            setTimeout(function(){
-                var ok = !(user || err);
-                res.status( ok ? 200 : 400 ).json({
-                    userExists : ok
-                });
-            }, 500);
-        })
-    },
-
     isSignedIn: function(req, res) {
         var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
@@ -87,6 +68,22 @@ var users = {
             });
         }
     },
+
+    getCurrentUser: function(req, res){
+        var userId = req.decoded.userId;
+        User.findById(userId, function(err, user){
+            if (err) {
+                return res.json({ success: false, message: 'Cannot retrieve user info' });
+            } else {
+                return res.json({ success: true, user: {
+                    user_id: user.id,
+                    last_name: user.last_name,
+                    first_name: user.first_name,
+                    username: user.username
+                } });
+            }
+        })
+    }
 
 };
 

@@ -1,0 +1,32 @@
+<div class="card grey lighten-5">
+    <div class="card-content black-text">
+        <div class="container">
+            <span class="card-title">Create New Room</span>
+            <form name="createRoomForm" ng-submit="addRoom()" validate>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="roomName"
+                               type="text"
+                               class="validate"
+                               ng-model="newRoom.roomName"
+                               required>
+                        <label for="roomName">Room Name</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input id="description"
+                               type="text"
+                               class="validate"
+                               ng-model="newRoom.description">
+                        <label for="description" >Room Description</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <button class="btn blue lighten-1 waves-effect waves-light col s12" type="submit">Create Room</button>
+                </div>
+            </form>
+            <p ng-show="errorMessage.length > 0">{{errorMessage}}</p>
+        </div>
+    </div>
+</div>

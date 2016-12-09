@@ -15,22 +15,22 @@
 <div ui-view></div>
 
 
+<!-- SocketIO Client lib -->
+<script type="text/javascript" src="/socket.io/socket.io.js"></script>
 
 <!-- JS libraries -->
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
 <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-messages/angular-messages.js"></script>
+<script type="text/javascript" src="bower_components/moment/moment.js"></script>
+<script type="text/javascript" src="bower_components/angular-moment/angular-moment.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
 <script type="text/javascript" src="bower_components/materialize/dist/js/materialize.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-socket-io/socket.min.js"></script>
 
-<script>
-    $(document).ready(function(){
-        $(".button-collapse").sideNav();
-    });
-</script>
 
 <!-- App modules -->
 <script type="text/javascript" src="modules/app.module.js"></script>
+<script type="text/javascript" src="modules/app.services.js"></script>
 <script type="text/javascript" src="modules/app.route.js"></script>
 
 <!-- Authentication modules -->
