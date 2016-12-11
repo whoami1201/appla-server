@@ -20,13 +20,16 @@ exports.connect = function (server) {
      */
 
     io.on('connection', function (socket) {
-        // console.log(socket.id);
+        numUsers++;
+        console.log(numUsers);
+        console.log(socket.id);
         var addedUser = false;
 
         /**
          * DISCONNECT
          */
         socket.on('disconnect', function () {
+            numUsers--;
             console.log("A user has logged out");
         });
 
@@ -50,6 +53,7 @@ exports.connect = function (server) {
                         io.to(socket.id).emit('rooms/error', err);
                     }
                     else {
+                        console.log("EMIT");
                         io.to(socket.id).emit('rooms/added');
                         io.emit('updateRoomList/added', result);
                     }

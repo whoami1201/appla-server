@@ -17,6 +17,10 @@ room-item {
     max-width: 200px;
 }
 
+.remove-room {
+    margin-right: 5%;
+}
+
 .remove-room:hover {
     color: #d32f2f !important;
 }

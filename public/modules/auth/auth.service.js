@@ -60,6 +60,9 @@ function AuthService($state, $timeout, $http, $q, $window) {
                 case 'login':
                     var fallback = 'home';
                     break;
+                case 'rooms':
+                    var fallback = 'login';
+                    break;
             }
 
             if (AuthService.signedIn) {
