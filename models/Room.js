@@ -23,13 +23,9 @@ var room = {
      * Add a user along with the corresponding socket to the passed room
      *
      */
-    addUser: function(room, socket, callback){
-
-        // Get current user's id
-        var userId = socket.request.session.passport.user;
-
+    addUser: function(room, userId, socketId, callback){
         // Push a new connection object(i.e. {userId + socketId})
-        var conn = { userId: userId, socketId: socket.id};
+        var conn = { userId: userId, socketId: socketId};
         room.connections.push(conn);
         room.save(callback);
     },
@@ -38,14 +34,12 @@ var room = {
      * Get all users in a room
      *
      */
-    getUsers: function(room, socket, callback){
+    getUsers: function(room, userId, callback){
 
         var users = [], vis = {}, count = 0;
-        var userId = socket.request.session.passport.user;
 
         // Loop on room's connections, Then:
         room.connections.forEach(function(conn){
-
             // 1. Count the number of connections of the current user(using one or more sockets) to the passed room.
             if(conn.userId === userId){
                 count++;
@@ -64,6 +58,7 @@ var room = {
         users.forEach(function(userId, i){
             User.findById(userId, function(err, user){
                 if (err) { return callback(err); }
+                user.password = "";
                 users[i] = user;
                 if(i + 1 === users.length){
                     return callback(null, users, count);
@@ -76,41 +71,24 @@ var room = {
      * Remove a user along with the corresponding socket from a room
      *
      */
-    removeUser: function(socket, callback){
+    removeUser: function(room, socketId, callback){
 
-        // Get current user's id
-        var userId = socket.request.session.passport.user;
-
-        find(function(err, rooms){
-            if(err) { return callback(err); }
-
-            // Loop on each room, Then:
-            rooms.every(function(room){
-                var pass = true, count = 0, target = 0;
-
-                // For every room,
-                // 1. Count the number of connections of the current user(using one or more sockets).
-                room.connections.forEach(function(conn, i){
-                    if(conn.userId === userId){
-                        count++;
-                    }
-                    if(conn.socketId === socket.id){
-                        pass = false, target = i;
-                    }
-                });
-
-                // 2. Check if the current room has the disconnected socket,
-                // If so, then, remove the current connection object, and terminate the loop.
-                if(!pass) {
-                    room.connections.id(room.connections[target]._id).remove();
-                    room.save(function(err){
-                        callback(err, room, userId, count);
-                    });
-                }
-
-                return pass;
-            });
+        var pass = true, target = 0;
+        console.log(room.room_name);
+        room.connections.forEach(function(conn, i){
+            if(conn.socketId === socketId){
+                pass = false;
+                target = i;
+            }
         });
+
+        if(!pass) {
+            room.connections.id(room.connections[target]._id).remove();
+            room.save(function(err){
+                callback(err, room);
+            });
+        }
+        return pass;
     }
 };
 

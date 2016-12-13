@@ -4,32 +4,32 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, $loca
         .state('home', {
             url: "/",
             templateUrl: "modules/home/views/home.html",
-            controller: HomeController,
             resolve: {
                 auth: function (AuthService) {
                     return AuthService.verifyUser('home');
                 }
-            }
+            },
+            controller: HomeController
         })
         .state('login', {
             url: "/login",
             templateUrl: "modules/auth/views/login.html",
-            controller: AuthController,
             resolve: {
                 auth: function (AuthService) {
                     return AuthService.verifyUser('login');
                 }
-            }
+            },
+            controller: AuthController
         })
         .state('rooms', {
             url: "/rooms/:roomSlug",
             templateUrl: "modules/room/views/room.html",
-            controller: RoomController,
             resolve: {
                 auth: function (AuthService) {
                     return AuthService.verifyUser('rooms');
                 }
-            }
+            },
+            controller: RoomController
         })
         .state('404', {
             url: "/404",

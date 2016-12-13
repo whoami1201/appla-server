@@ -9,10 +9,7 @@ var RoomSchema = new mongoose.Schema({
         required: true
     },
     owner_id: Schema.Types.ObjectId,
-    connections: [{
-        user_id: Schema.Types.ObjectId,
-        socket_id: String
-    }],
+    connections: { type: [{ userId: String, socketId: String }]},
     description: {
         type: String,
         default: ""

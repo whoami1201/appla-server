@@ -19,17 +19,65 @@ exports.connect = function (server) {
      * All the socket api route will be handled on connection
      */
 
-    io.on('connection', function (socket) {
-        numUsers++;
-        console.log(numUsers);
-        console.log(socket.id);
+    io.of('/rooms').on('connection', function (socket) {
+        var roomSlug = "";
+        console.log("Connected room " + socket.id);
+
+        /**
+         * JOIN ROOM
+         * socket: rooms/join
+         * data { roomSlug, userId }
+         */
+        socket.on('rooms/join', function (data) {
+            var userId = data.userId;
+            roomSlug = data.roomSlug;
+            console.log("HELLO ROOM JOIN");
+            console.log(data);
+
+
+            Room.findOne({slug: data.roomSlug}, function (err, room) {
+                if (err) throw err;
+                if (!room) {
+                    socket.emit('rooms/error', {error: "Room not found"});
+                } else {
+                    Room.addUser(room, userId, socket.id, function (err, newRoom) {
+                        if (err) throw err;
+                        socket.join(newRoom.id);
+                        Room.getUsers(newRoom, userId, function (err, users, countUserInRoom) {
+                            if (err) throw err;
+                            socket.in(newRoom.id).emit('rooms/updateUserList', users);
+                        })
+                    })
+                }
+            });
+
+        });
+
+        socket.on('disconnect', function () {
+            Room.findOne({slug: roomSlug}, function (err, room) {
+                if (err) throw err;
+                if (!room) {
+                    console.log("Room not found");
+                } else {
+                    Room.removeUser(room, socket.id, function (err, room) {
+                        socket.in(room.id).emit('rooms/updateUserList', room);
+                    });
+                }
+            });
+
+            console.log("Disconnected from room");
+        })
+
+    });
+
+    io.of('/').on('connection', function (socket) {
+        console.log("Connected");
         var addedUser = false;
 
         /**
          * DISCONNECT
          */
         socket.on('disconnect', function () {
-            numUsers--;
             console.log("A user has logged out");
         });
 
@@ -50,12 +98,11 @@ exports.connect = function (server) {
 
                 Room.create(room, function (err, result) {
                     if (err) {
-                        io.to(socket.id).emit('rooms/error', err);
+                        socket.emit('rooms/error', err);
                     }
                     else {
-                        console.log("EMIT");
-                        io.to(socket.id).emit('rooms/added');
-                        io.emit('updateRoomList/added', result);
+                        socket.emit('rooms/added');
+                        io.sockets.emit('updateRoomList/added', result);
                     }
                 });
 
@@ -66,26 +113,24 @@ exports.connect = function (server) {
          * DELETE ROOM
          * socket: rooms/delete
          */
-        socket.on('rooms/delete', function(data){
+        socket.on('rooms/delete', function (data) {
             var decoded = helpers.authorizeToken(data.token);
             if (decoded != false) {
 
                 Room.findByIdAndUpdate(data.roomId, {
-                    $set: { sync_deleted: moment().unix() }
+                    $set: {sync_deleted: moment().unix()}
                 }, function (err, result) {
                     if (err) {
-                        io.to(socket.id).emit('rooms/error', err);
+                        socket.emit('rooms/error', err);
                     }
                     else {
-                        io.to(socket.id).emit('rooms/deleted');
-                        io.emit('updateRoomList/deleted', result);
+                        socket.emit('rooms/deleted');
+                        io.sockets.emit('updateRoomList/deleted', result);
                     }
                 });
 
             }
         });
-
-
 
 
         /**
@@ -136,7 +181,7 @@ exports.connect = function (server) {
 };
 
 var helpers = {
-    authorizeToken: function(token){
+    authorizeToken: function (token) {
         var decoded = false;
         try {
             decoded = jwt.verify(token, Constants.secret);

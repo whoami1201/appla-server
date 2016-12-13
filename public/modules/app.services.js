@@ -1,5 +1,12 @@
-angular.module('app.services', []).
-    factory('mSocket', function (socketFactory) {
-        var mSocket = socketFactory();
-        return mSocket;
+angular.module('app.services', [])
+    .factory('mSocket', function (socketFactory) {
+        return socketFactory({
+            prefix: ''
+        });
+    })
+    .factory('roomSocket', function(socketFactory) {
+        return socketFactory({
+            ioSocket: io.connect('/rooms'),
+            prefix: ''
+        });
     });

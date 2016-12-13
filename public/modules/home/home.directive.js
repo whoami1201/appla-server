@@ -1,5 +1,5 @@
 angular.module('home.module')
-    .directive('roomItem', ['$state','HomeService', function ($state, HomeService) {
+    .directive('roomItem', ['$state', 'mSocket','HomeService', function ($state, mSocket, HomeService) {
         return {
             restrict: 'E',
             templateUrl: 'modules/home/views/room_item.html',
@@ -7,15 +7,12 @@ angular.module('home.module')
                 user: '=userInfo',
                 room: '=room'
             },
-            link: function(scope, attrs){
+            link: function(scope){
                 scope.joinRoom = joinRoom;
                 scope.deleteRoom = deleteRoom;
 
-                function joinRoom(roomId, roomSlug) {
-                    $state.go('rooms', {
-                        roomId: roomId,
-                        roomSlug: roomSlug
-                    });
+                function joinRoom(roomSlug) {
+                    HomeService.joinRoom(roomSlug);
                 }
 
                 function deleteRoom(roomId) {

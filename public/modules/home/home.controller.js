@@ -1,15 +1,27 @@
-angular.module('home.module').controller('HomeController', ['$scope', 'mSocket', '$document', 'HomeService', 'AuthService', HomeController]);
+angular.module('home.module').controller('HomeController', ['$window','$rootScope','$scope', 'mSocket', 'roomSocket','$document', 'HomeService', 'AuthService', HomeController]);
 
-function HomeController($scope, mSocket, $document, HomeService, AuthService) {
+function HomeController($window, $rootScope, $scope, mSocket, roomSocket, $document, HomeService, AuthService) {
     $scope.signOut = signOut;
     $scope.toggleCreateRoomForm = toggleCreateRoomForm;
     $scope.rooms = [];
-    $scope.user = {};
+    $rootScope.user = {};
     $scope.showCreateRoomForm = false;
 
-    $scope.initCount = 1;
 
-    $scope.initCount++;
+    /**
+     * JQUERY STUFFS
+     */
+    $document.ready(function () {
+        angular.element(".button-collapse").sideNav();
+        angular.element(".dropdown-button").dropdown();
+        angular.element('.tooltipped').tooltip({delay: 50});
+    });
+
+    /**
+     * SOCKET
+     */
+
+    roomSocket.disconnect();
 
     mSocket.forward('updateRoomList/added', $scope);
     mSocket.forward('updateRoomList/deleted', $scope);
@@ -17,17 +29,11 @@ function HomeController($scope, mSocket, $document, HomeService, AuthService) {
     mSocket.forward('rooms/added', $scope);
     mSocket.forward('rooms/error', $scope);
 
-    $document.ready(function () {
-        angular.element(".button-collapse").sideNav();
-        angular.element(".dropdown-button").dropdown();
-        angular.element('.tooltipped').tooltip({delay: 50});
-    });
-
-    $scope.$on('socket:updateRoomList/added', function(data) {
+    $scope.$on('updateRoomList/added', function(ev, data) {
         $scope.rooms.push(data);
     });
 
-    $scope.$on('socket:updateRoomList/deleted', function(data) {
+    $scope.$on('updateRoomList/deleted', function(ev, data) {
         var index = 0;
         for(var i=0;i < $scope.rooms.length;i++){
             if($scope.rooms[i]._id == data._id){
@@ -38,19 +44,19 @@ function HomeController($scope, mSocket, $document, HomeService, AuthService) {
         $scope.rooms.splice(index, 1);
     });
 
-    $scope.$on('socket:rooms/added', function(data){
-        console.log($scope.initCount);
+    $scope.$on('rooms/added', function(){
         Materialize.toast('Room created!', 2000, 'rounded');
         toggleCreateRoomForm();
     });
 
-    $scope.$on('socket:rooms/deleted', function(){
+    $scope.$on('rooms/deleted', function(){
         Materialize.toast('Room removed!', 2000, 'rounded');
     });
-    $scope.$on('socket:rooms/error', function(err){
+    $scope.$on('rooms/error', function(err){
         console.log("Room error");
         console.log(err);
     });
+
 
     init();
 
@@ -59,14 +65,23 @@ function HomeController($scope, mSocket, $document, HomeService, AuthService) {
         getUser();
     }
 
+    /**
+     * get current user info
+     */
+
     function getUser() {
         HomeService.getUser().then(function (res) {
             if (res.data.user) {
-                $scope.user = res.data.user;
+                var user = res.data.user;
+                $scope.user = user;
+                $window.sessionStorage.setItem('currentUser', JSON.stringify(user));
             }
         })
     }
 
+    /**
+     * get all rooms info
+     */
     function getAllRooms() {
         HomeService.getAllRoom().then(function (res) {
             if (res.data.rooms) {
@@ -80,8 +95,9 @@ function HomeController($scope, mSocket, $document, HomeService, AuthService) {
         })
     }
 
-
-
+    /**
+     * Toggle create room form
+     */
     function toggleCreateRoomForm() {
         $scope.showCreateRoomForm = !$scope.showCreateRoomForm;
     }

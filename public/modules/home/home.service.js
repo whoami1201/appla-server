@@ -8,20 +8,12 @@ function HomeService($window, $state, $http, $q, mSocket) {
     HomeService.getUser = getUser;
     HomeService.addRoom = addRoom;
     HomeService.deleteRoom = deleteRoom;
+    HomeService.joinRoom = joinRoom;
 
     var token = $window.localStorage.accessToken;
 
     function getAllRooms(){
-        // var deferred = $q.defer();
-        // setTimeout(function(){
-            return $http.get('/api/rooms', { headers: { "x-access-token": token }});
-                // .then(function(response) {
-                //     deferred.resolve(response.data);
-                // }, function(err) {
-                //     deferred.reject(err);
-                // });
-        // }, 200);
-        // return deferred.promise;
+        return $http.get('/api/rooms', { headers: { "x-access-token": token }});
     }
 
     function getUser(){
@@ -39,6 +31,12 @@ function HomeService($window, $state, $http, $q, mSocket) {
         mSocket.emit('rooms/delete', {
             roomId: roomId,
             token: token
+        })
+    }
+
+    function joinRoom(roomSlug) {
+        $state.go('rooms', {
+            roomSlug: roomSlug
         })
     }
 
