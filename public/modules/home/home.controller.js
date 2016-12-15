@@ -1,11 +1,12 @@
-angular.module('home.module').controller('HomeController', ['$window','$rootScope','$scope', 'mSocket', 'roomSocket','$document', 'HomeService', 'AuthService', HomeController]);
+angular.module('home.module').controller('HomeController', ['$window', 'promisedUser', 'promisedRooms','$scope', 'mSocket', 'roomSocket','$document', 'HomeService', 'AuthService', HomeController]);
 
-function HomeController($window, $rootScope, $scope, mSocket, roomSocket, $document, HomeService, AuthService) {
+function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, roomSocket, $document, HomeService, AuthService) {
     $scope.signOut = signOut;
     $scope.toggleCreateRoomForm = toggleCreateRoomForm;
     $scope.rooms = [];
-    $rootScope.user = {};
+    $scope.user = [];
     $scope.showCreateRoomForm = false;
+    $scope.noRoomMessage = "";
 
 
     /**
@@ -70,29 +71,21 @@ function HomeController($window, $rootScope, $scope, mSocket, roomSocket, $docum
      */
 
     function getUser() {
-        HomeService.getUser().then(function (res) {
-            if (res.data.user) {
-                var user = res.data.user;
-                $scope.user = user;
-                $window.sessionStorage.setItem('currentUser', JSON.stringify(user));
-            }
-        })
+        if (promisedUser.data.success) {
+            $scope.user = promisedUser.data.user;
+            $window.sessionStorage.setItem('currentUser', JSON.stringify($scope.user));
+        }
     }
 
     /**
      * get all rooms info
      */
     function getAllRooms() {
-        HomeService.getAllRoom().then(function (res) {
-            if (res.data.rooms) {
-                $scope.rooms = res.data.rooms;
-                $scope.noRoomMessage = "";
-            } else {
-                $scope.noRoomMessage = "No Room Available. Create one."
-            }
-        }, function () {
-            $scope.errorMessage = "Could not load rooms."
-        })
+        if (promisedRooms.data.success) {
+            $scope.rooms = promisedRooms.data.rooms;
+        } else {
+            $scope.noRoomMessage = "No rooms available. Create one.";
+        }
     }
 
     /**

@@ -7,7 +7,18 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, $loca
             resolve: {
                 auth: function (AuthService) {
                     return AuthService.verifyUser('home');
-                }
+                },
+                promisedUser: ['$http', '$window', function($http, $window) {
+                    return $http.get('/api/users/getCurrentUser', {
+                        headers: { "x-access-token": $window.localStorage.accessToken}
+                    });
+                }],
+                promisedRooms: ['$http', '$window', function($http, $window) {
+                    return $http.get('/api/rooms', {
+                        headers: { "x-access-token": $window.localStorage.accessToken }
+                    });
+
+                }]
             },
             controller: HomeController
         })

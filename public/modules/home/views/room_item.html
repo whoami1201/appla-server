@@ -2,10 +2,10 @@
 <li class="collection-item room-item-link" ng-click="joinRoom(room.slug)">
     <div class="row" style="margin-top: 15px;">
         <div class="row">
-            <div class="col s3">
+            <div class="col s6">
                 <span class="red-text text-darken-4 title">{{room.room_name}}</span>
             </div>
-            <div class="grey-text col offset-s5 s4">
+            <div class="grey-text col offset-s2 s4">
                 {{ room.created_at  | amFromUnix | amDateFormat:'HH:mm - DD MMM, YYYY'}}
             </div>
         </div>

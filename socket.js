@@ -21,7 +21,6 @@ exports.connect = function (server) {
 
     io.of('/rooms').on('connection', function (socket) {
         var roomSlug = "";
-        console.log("Connected room " + socket.id);
 
         /**
          * JOIN ROOM
@@ -31,9 +30,6 @@ exports.connect = function (server) {
         socket.on('rooms/join', function (data) {
             var userId = data.userId;
             roomSlug = data.roomSlug;
-            console.log("HELLO ROOM JOIN");
-            console.log(data);
-
 
             Room.findOne({slug: data.roomSlug}, function (err, room) {
                 if (err) throw err;
@@ -43,9 +39,12 @@ exports.connect = function (server) {
                     Room.addUser(room, userId, socket.id, function (err, newRoom) {
                         if (err) throw err;
                         socket.join(newRoom.id);
+                        console.log(newRoom.id);
                         Room.getUsers(newRoom, userId, function (err, users, countUserInRoom) {
                             if (err) throw err;
-                            socket.in(newRoom.id).emit('rooms/updateUserList', users);
+                            console.log(newRoom.id);
+                            console.log(users);
+                            socket.to(newRoom.id).emit('rooms/updateUserList', users);
                         })
                     })
                 }
@@ -57,28 +56,25 @@ exports.connect = function (server) {
             Room.findOne({slug: roomSlug}, function (err, room) {
                 if (err) throw err;
                 if (!room) {
-                    console.log("Room not found");
+                    console.log("DISCONNECT: Room not found");
                 } else {
+                    socket.leave(room.id);
                     Room.removeUser(room, socket.id, function (err, room) {
                         socket.in(room.id).emit('rooms/updateUserList', room);
                     });
                 }
             });
-
-            console.log("Disconnected from room");
         })
 
     });
 
     io.of('/').on('connection', function (socket) {
-        console.log("Connected");
         var addedUser = false;
 
         /**
          * DISCONNECT
          */
         socket.on('disconnect', function () {
-            console.log("A user has logged out");
         });
 
 

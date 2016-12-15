@@ -4,21 +4,10 @@ angular.module('home.module')
 function HomeService($window, $state, $http, $q, mSocket) {
     var HomeService = {};
 
-    HomeService.getAllRoom = getAllRooms;
-    HomeService.getUser = getUser;
     HomeService.addRoom = addRoom;
     HomeService.deleteRoom = deleteRoom;
     HomeService.joinRoom = joinRoom;
 
-    var token = $window.localStorage.accessToken;
-
-    function getAllRooms(){
-        return $http.get('/api/rooms', { headers: { "x-access-token": token }});
-    }
-
-    function getUser(){
-        return $http.get('/api/users/getCurrentUser',{ headers: { "x-access-token": token}});
-    }
 
     function addRoom(room){
         mSocket.emit('rooms/add', {

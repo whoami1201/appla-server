@@ -72,9 +72,7 @@ var room = {
      *
      */
     removeUser: function(room, socketId, callback){
-
         var pass = true, target = 0;
-        console.log(room.room_name);
         room.connections.forEach(function(conn, i){
             if(conn.socketId === socketId){
                 pass = false;
