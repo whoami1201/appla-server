@@ -1,0 +1,28 @@
+<ul class="messageList row" scroll-glue>
+    <div class="col s12" ng-repeat="message in messages">
+        <div class="row">
+            <div class="col m4 right-align hide-on-small-and-down username text-accent-1">
+                <div class="col m12">
+                    {{message.owner_info.first_name}} {{message.owner_info.last_name}}
+                </div>
+                <div class="col m12 time-stamp">
+                    {{ message.created_at  | amFromUnix | amDateFormat:'HH:mm DD MMM'}}
+                </div>
+            </div>
+            <div class="hide-on-med-and-up">
+                <div class="col s6 left-align username text-accent-1">
+                    {{message.owner_info.first_name}} {{message.owner_info.last_name}}
+                </div>
+                <div class="col s6 right-align time-stamp text-accent-1">
+                    {{ message.created_at  | amFromUnix | amDateFormat:'HH:mm DD MMM'}}
+                </div>
+            </div>
+            <div class="col s12 m8">
+                <div class="msg-content msg grey lighten-4">{{message.message}}</div>
+            </div>
+        </div>
+    </div>
+</ul>
+<form class="type-box" ng-submit="sendMessage()">
+    <input ng-model="message" placeholder="Type your message here.."/><button class="sendBtn">Send</button>
+</form>

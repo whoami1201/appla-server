@@ -33,6 +33,7 @@ router.get('/users/getCurrentUser', userCtrl.getCurrentUser);
 
 router.get('/messages', messageCtrl.getAll);
 router.get('/messages/:msgId', messageCtrl.getOne);
+router.get('/messages/getMessagesByRoom/:roomSlug', messageCtrl.getMessagesByRoom);
 router.post('/messages/', messageCtrl.create);
 router.put('/messages/:msgId', messageCtrl.update);
 router.delete('/messages/:msgId', messageCtrl.delete);
@@ -42,6 +43,7 @@ router.get('/rooms/:roomSlug', roomCtrl.getOne);
 router.post('/rooms', roomCtrl.create);
 router.put('/rooms/:roomSlug/join', roomCtrl.update);
 router.delete('/rooms/:roomSlug', roomCtrl.delete);
+
 
 
 module.exports = router;

@@ -24,17 +24,14 @@
 <div class="message-container">
     <div class="row">
         <div class="col s12">
-            <h4 class="room-title center-align red-text text-darken-4">Room name</h4>
+            <h4 class="room-title center-align red-text text-darken-4">{{room.room_name}}</h4>
             <user-list></user-list>
         </div>
     </div>
     <li class="divider"></li>
-    <div class="row">
-        <div class="col s12">
-            <ul id="messageList"></ul>
-            <form action="" id="chat" class="chatbox">
-                <input id="m" autocomplete="off" placeholder="Type your message here.."/><button class="sendBtn">Send</button>
-            </form>
+    <div class="row message-row">
+        <div class="col s12 message-col">
+            <chatbox></chatbox>
         </div>
     </div>
 </div>

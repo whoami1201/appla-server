@@ -38,7 +38,12 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, $loca
             resolve: {
                 auth: function (AuthService) {
                     return AuthService.verifyUser('rooms');
-                }
+                },
+                promisedMessages: ['$http', '$window', '$stateParams', function($http, $window, $stateParams) {
+                    return $http.get('/api/messages/getMessagesByRoom/' + $stateParams.roomSlug, {
+                        headers: { "x-access-token": $window.localStorage.accessToken }
+                    });
+                }]
             },
             controller: RoomController
         })

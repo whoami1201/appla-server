@@ -4,12 +4,14 @@ var expressValidator = require('express-validator');
 var path = require('path');
 
 var Constants = require('./config/constants');
+var app = express();
 
 var router = require('./router');
-var socket = require('./socket');
+// var socket = require('./socket');
+var ioServer 	= require('./socket')(app);
 
-var app = express();
-var http = require('http').Server(app);
+// var http = require('http').Server(app);
+var port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -36,13 +38,15 @@ app.use("*", function (req, res) {
     res.status(404).send('404');
 });
 
-socket.connect(http);
+// socket.connect(http);
+//
+// http.listen(3000, function () {
+//     var host = http.address().address;
+//     var port = http.address().port;
+//     console.log("Server listening at http://%s:%s", host, port);
+// });
 
-http.listen(3000, function () {
-    var host = http.address().address;
-    var port = http.address().port;
-    console.log("Server listening at http://%s:%s", host, port);
-});
+ioServer.listen(port);
 
-module.exports = app;
+// module.exports = app;
 

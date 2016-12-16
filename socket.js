@@ -1,4 +1,3 @@
-var io = require('socket.io');
 var moment = require('moment');
 var jwt = require("jsonwebtoken");
 var Constants = require("./config/constants.js");
@@ -7,20 +6,23 @@ var Constants = require("./config/constants.js");
  * Connect and handling event coming
  * @param server
  */
-exports.connect = function (server) {
-    io = io.listen(server, {});
+var ioEvents = function (io) {
 
     var numUsers = 0;
 
     var Message = require('./models/Message');
     var Room = require('./models/Room');
 
+    var roomsIo = io.of('/rooms');
+    var homeIo = io.of('/');
+
     /**
      * All the socket api route will be handled on connection
      */
 
-    io.of('/rooms').on('connection', function (socket) {
+    roomsIo.on('connection', function (socket) {
         var roomSlug = "";
+        var userId = "";
 
         /**
          * JOIN ROOM
@@ -28,7 +30,7 @@ exports.connect = function (server) {
          * data { roomSlug, userId }
          */
         socket.on('rooms/join', function (data) {
-            var userId = data.userId;
+            userId = data.userId;
             roomSlug = data.roomSlug;
 
             Room.findOne({slug: data.roomSlug}, function (err, room) {
@@ -38,15 +40,41 @@ exports.connect = function (server) {
                 } else {
                     Room.addUser(room, userId, socket.id, function (err, newRoom) {
                         if (err) throw err;
-                        socket.join(newRoom.id);
-                        console.log(newRoom.id);
+                        socket.join(newRoom._id);
                         Room.getUsers(newRoom, userId, function (err, users, countUserInRoom) {
                             if (err) throw err;
-                            console.log(newRoom.id);
-                            console.log(users);
-                            socket.to(newRoom.id).emit('rooms/updateUserList', users);
+                            socket.emit('rooms/joined', newRoom);
+                            roomsIo.in(newRoom._id).emit('rooms/updateUserList', users);
                         })
                     })
+                }
+            });
+        });
+
+        /**
+         * SEND MESSAGE
+         * socket: messages/send
+         * data: {message, userId}
+         */
+
+        socket.on('messages/send', function(data){
+            Room.findOne({ slug: roomSlug }, function(err, room){
+                if (err) throw err;
+                if (room) {
+                    var createMessage = {
+                        message: data.message,
+                        owner_info: {
+                            owner_id: data.userId,
+                            first_name: "",
+                            last_name: ""
+                        },
+                        room_slug: room.slug,
+                        created_at: moment().unix()
+                    };
+                    Message.create(createMessage, function(err, newMessage) {
+                        if (err) throw err;
+                        roomsIo.in(room._id).emit('messages/received', newMessage);
+                    });
                 }
             });
 
@@ -58,9 +86,13 @@ exports.connect = function (server) {
                 if (!room) {
                     console.log("DISCONNECT: Room not found");
                 } else {
-                    socket.leave(room.id);
-                    Room.removeUser(room, socket.id, function (err, room) {
-                        socket.in(room.id).emit('rooms/updateUserList', room);
+                    Room.removeUser(room, socket.id, function (err, newRoom) {
+                        if (err) throw err;
+                        socket.leave(newRoom._id);
+                        Room.getUsers(newRoom, userId, function(err, users, countUserInRoom) {
+                            if (err) throw err;
+                            roomsIo.in(newRoom._id).emit('rooms/updateUserList', users);
+                        });
                     });
                 }
             });
@@ -68,7 +100,7 @@ exports.connect = function (server) {
 
     });
 
-    io.of('/').on('connection', function (socket) {
+    homeIo.on('connection', function (socket) {
         var addedUser = false;
 
         /**
@@ -98,7 +130,7 @@ exports.connect = function (server) {
                     }
                     else {
                         socket.emit('rooms/added');
-                        io.sockets.emit('updateRoomList/added', result);
+                        homeIo.sockets.emit('updateRoomList/added', result);
                     }
                 });
 
@@ -121,7 +153,7 @@ exports.connect = function (server) {
                     }
                     else {
                         socket.emit('rooms/deleted');
-                        io.sockets.emit('updateRoomList/deleted', result);
+                        homeIo.sockets.emit('updateRoomList/deleted', result);
                     }
                 });
 
@@ -187,5 +219,18 @@ var helpers = {
         return decoded;
     }
 };
+
+
+var init = function(app) {
+    var server = require('http').Server(app);
+    var io = require('socket.io')(server);
+    io.set('transports', ['polling'] );
+
+    ioEvents(io);
+
+    return server;
+};
+
+module.exports = init;
 
 

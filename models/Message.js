@@ -17,8 +17,8 @@ var message = {
     findByIdAndUpdate: function (id, data, callback) {
         messageModel.findByIdAndUpdate(id, data, {new: true}, callback);
     },
-    findByRoomId: function(roomId, socket, callback){
-
+    findByRoomSlug: function(roomSlug, callback){
+        messageModel.find({room_slug: roomSlug}, callback);
     }
 };
 

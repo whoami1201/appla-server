@@ -1,7 +1,12 @@
-angular.module('room.module').controller('RoomController', ['$window','$document','$stateParams','$scope', 'roomSocket', 'RoomService',RoomController]);
+angular.module('room.module').controller('RoomController', [ 'promisedMessages','$window','$document','$stateParams','$scope', '$rootScope','roomSocket', 'RoomService',RoomController]);
 
-function RoomController($window, $document, $stateParams, $scope, roomSocket, RoomService ) {
+function RoomController(promisedMessages, $window, $document, $stateParams, $scope, $rootScope, roomSocket, RoomService ) {
 
+    if (promisedMessages.data.success) {
+        $scope.messages = promisedMessages.data.messages;
+    } else {
+        $scope.messages = [];
+    }
 
     $document.ready(function () {
         angular.element(".button-collapse").sideNav();
@@ -13,11 +18,10 @@ function RoomController($window, $document, $stateParams, $scope, roomSocket, Ro
 
     roomSocket.connect();
 
-    roomSocket.forward('rooms/updateUserList', $scope);
+    roomSocket.forward('rooms/joined', $scope);
 
-    $scope.$on('rooms/updateUserList', function(ev, room) {
-        console.log("JOINED ROOM");
-        console.log(room);
+    $scope.$on('rooms/joined', function(ev, room) {
+        $scope.room = room;
     });
 
 
@@ -29,8 +33,8 @@ function RoomController($window, $document, $stateParams, $scope, roomSocket, Ro
 
     function init() {
         var temp = $window.sessionStorage.getItem('currentUser');
-        $scope.user = angular.fromJson(temp);
-        RoomService.joinRoom($stateParams.roomSlug, $scope.user);
+        $rootScope.user = angular.fromJson(temp);
+        RoomService.joinRoom($stateParams.roomSlug, $rootScope.user);
     }
 
 }

@@ -5,5 +5,6 @@ angular.module('app', [
     'room.module',
     'angularMoment',
     'ui.router',
-    'btford.socket-io'
-    ]);
+    'btford.socket-io',
+    'luegg.directives'
+]);

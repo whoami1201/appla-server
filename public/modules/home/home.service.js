@@ -8,6 +8,7 @@ function HomeService($window, $state, $http, $q, mSocket) {
     HomeService.deleteRoom = deleteRoom;
     HomeService.joinRoom = joinRoom;
 
+    var token = $window.localStorage.accessToken;
 
     function addRoom(room){
         mSocket.emit('rooms/add', {

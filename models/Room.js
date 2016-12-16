@@ -36,7 +36,8 @@ var room = {
      */
     getUsers: function(room, userId, callback){
 
-        var users = [], vis = {}, count = 0;
+        var userIds = [], vis = {}, count = 0;
+        var userList = [];
 
         // Loop on room's connections, Then:
         room.connections.forEach(function(conn){
@@ -47,7 +48,7 @@ var room = {
 
             // 2. Create an array(i.e. users) contains unique users' ids
             if(!vis[conn.userId]){
-                users.push(conn.userId);
+                userIds.push(conn.userId);
             }
             vis[conn.userId] = true;
         });
@@ -55,13 +56,14 @@ var room = {
         // Loop on each user id, Then:
         // Get the user object by id, and assign it to users array.
         // So, users array will hold users' objects instead of ids.
-        users.forEach(function(userId, i){
+        userIds.forEach(function(userId, i){
+
             User.findById(userId, function(err, user){
                 if (err) { return callback(err); }
                 user.password = "";
-                users[i] = user;
-                if(i + 1 === users.length){
-                    return callback(null, users, count);
+                userIds[i] = user;
+                if (i+1===userIds.length) {
+                    return callback(null, userIds, count);
                 }
             });
         });
@@ -72,7 +74,7 @@ var room = {
      *
      */
     removeUser: function(room, socketId, callback){
-        var pass = true, target = 0;
+        var pass = true, target = 0, userId = "";
         room.connections.forEach(function(conn, i){
             if(conn.socketId === socketId){
                 pass = false;
@@ -80,6 +82,8 @@ var room = {
             }
         });
 
+        // 2. Check if the current room has the disconnected socket,
+        // If so, then, remove the current connection object, and terminate the loop.
         if(!pass) {
             room.connections.id(room.connections[target]._id).remove();
             room.save(function(err){

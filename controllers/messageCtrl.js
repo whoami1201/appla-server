@@ -33,6 +33,17 @@ var messages = {
         });
     },
 
+
+    getMessagesByRoom: function(req, res){
+        Message.findByRoomSlug(req.params.roomSlug, function(err, result){
+            if (err)
+                return res.json({ success: false, message: "MESSAGE_GET_ERROR"});
+            else
+                return res.json({ success: true, messages: result});
+        });
+    },
+
+
     /**
      * POST /messages
      *
@@ -43,7 +54,6 @@ var messages = {
      */
     create: function (req, res) {
         req.checkBody('message', 'Invalid').notEmpty();
-        req.checkBody('roomSlug','Invalid').notEmpty();
 
         var errors = req.validationErrors();
 
@@ -52,11 +62,16 @@ var messages = {
             return;
         }
         var userId = req.decoded.userId,
-            roomSlug = req.body.roomSlug,
             message = req.body.message;
 
 
-        Message.addMessageToRoom(userId, roomSlug, message, function (err, result) {
+        Message.create({
+            owner_info: {
+                owner_id: userId
+            },
+            message: message,
+            room_slug: "random-slug"
+        }, function (err, result) {
             if (err)
                 return res.json({ success: false, message: err});
             else
