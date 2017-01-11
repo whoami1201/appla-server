@@ -114,6 +114,7 @@ var ioEvents = function (io) {
          * DISCONNECT
          */
         socket.on('disconnect', function () {
+            socket.leave(userId);
         });
 
 
@@ -168,6 +169,8 @@ var ioEvents = function (io) {
         });
 
         socket.on('messages/send', function (data) {
+            console.log(socket);
+            console.log(data);
             if (decoded!= false) {
                 var createMessage = {
                     message: data.message,
