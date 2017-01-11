@@ -1,7 +1,7 @@
 var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
-var User = require('../models/User');
-var Constants = require('../config/constants');
+var User = require('../models/User.js');
+var Constants = require('../config/constants.js');
 
 var auth;
 auth = {

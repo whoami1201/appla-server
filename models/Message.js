@@ -1,4 +1,4 @@
-var messageModel   = require('../database').models.message;
+var messageModel = require('../database').models.message;
 
 var message = {
     create: function (data, callback) {

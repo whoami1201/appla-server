@@ -1,5 +1,5 @@
 var roomModel   = require('../database').models.room;
-var User 		= require('../models/user');
+var User 		= require('../models/User.js');
 
 var room = {
     create: function (data, callback){
