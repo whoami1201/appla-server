@@ -15,8 +15,8 @@ Mongoose.Promise = global.Promise;
 
 module.exports = { Mongoose: Mongoose,
     models: {
-        user: require('./schemas/user.js'),
-        room: require('./schemas/room.js'),
-        message: require('./schemas/message.js')
+        user: require('./schemas/User.js'),
+        room: require('./schemas/Room.js'),
+        message: require('./schemas/Message.js')
     }
 };
