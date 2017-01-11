@@ -47,7 +47,7 @@ angular.module('home.module')
                 });
 
                 function addRoom() {
-                    HomeService.addRoom($scope.newRoom);
+                    HomeService.sendMessage("HELLO FUCKER");
                 }
             }
         }

@@ -1,6 +1,7 @@
 angular.module('app.services', [])
-    .factory('mSocket', function (socketFactory) {
+    .factory('mSocket', function (socketFactory, $window) {
         return socketFactory({
+            ioSocket: io.connect('', {query: "token=" + $window.localStorage.accessToken}),
             prefix: ''
         });
     })

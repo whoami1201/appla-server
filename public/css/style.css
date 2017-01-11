@@ -6,10 +6,8 @@ room-item .title {
     font-size: 20px;
 }
 
-room-item .room-item-link:hover {
-    transition: background ease-in 0.5s;
-    -webkit-transition: background 0.5s;
-    background: rgba(0,0,0,0.02);
+room-item .title:hover {
+    color: #FF5722 !important;
     cursor: pointer;
 }
 
@@ -35,7 +33,7 @@ room-item {
 
 .messageList {
     list-style-type: none;
-    height: calc(100% - 60px);
+    height:100%;
     overflow-y: scroll;
 }
 
@@ -66,7 +64,7 @@ room-item {
 }
 
 .message-container {
-    top: 80px; bottom: 70px;
+    top: 73px; bottom: 70px;
     left: 30%; right: 30%;
     min-height: 400px;
     background: #FAFAFA;
@@ -127,6 +125,7 @@ room-item {
 
     .message-container {
         left: 20px; right: 20px;
+        /*position: relative;*/
     }
 }
 

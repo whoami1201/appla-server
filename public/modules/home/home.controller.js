@@ -4,9 +4,11 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     $scope.signOut = signOut;
     $scope.toggleCreateRoomForm = toggleCreateRoomForm;
     $scope.rooms = [];
+    $scope.messages = [];
     $scope.user = [];
     $scope.showCreateRoomForm = false;
     $scope.noRoomMessage = "";
+
 
 
     /**
@@ -19,6 +21,12 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     });
 
     /**
+     * INIT
+     */
+    init();
+
+
+    /**
      * SOCKET
      */
 
@@ -29,6 +37,12 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     mSocket.forward('rooms/deleted', $scope);
     mSocket.forward('rooms/added', $scope);
     mSocket.forward('rooms/error', $scope);
+    mSocket.forward('messages/received', $scope);
+
+    $scope.$on('messages/received', function(ev, data){
+        console.log("Message received");
+        console.log(data);
+    });
 
     $scope.$on('updateRoomList/added', function(ev, data) {
         $scope.rooms.push(data);
@@ -59,7 +73,6 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     });
 
 
-    init();
 
     function init() {
         getAllRooms();

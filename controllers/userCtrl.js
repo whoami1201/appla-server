@@ -46,8 +46,9 @@ var users = {
     },
 
     isSignedIn: function(req, res) {
-        var token = req.body.token || req.query.token || req.headers['x-access-token'];
 
+
+        var token = req.body.token || req.query.token || req.headers['x-access-token'];
         // decode token
         if (token) {
             // verifies secret and checks exp

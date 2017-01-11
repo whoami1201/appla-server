@@ -103,6 +103,13 @@ var ioEvents = function (io) {
     homeIo.on('connection', function (socket) {
         var addedUser = false;
 
+        var token = socket.handshake.query.token || "";
+        var decoded = helpers.authorizeToken(token);
+        if (decoded!=false){
+            var userId = decoded.userId;
+            socket.join(userId);
+        }
+
         /**
          * DISCONNECT
          */
@@ -130,7 +137,7 @@ var ioEvents = function (io) {
                     }
                     else {
                         socket.emit('rooms/added');
-                        homeIo.sockets.emit('updateRoomList/added', result);
+                        homeIo.emit('updateRoomList/added', result);
                     }
                 });
 
@@ -153,10 +160,29 @@ var ioEvents = function (io) {
                     }
                     else {
                         socket.emit('rooms/deleted');
-                        homeIo.sockets.emit('updateRoomList/deleted', result);
+                        homeIo.emit('updateRoomList/deleted', result);
                     }
                 });
 
+            }
+        });
+
+        socket.on('messages/send', function (data) {
+            if (decoded!= false) {
+                var createMessage = {
+                    message: data.message,
+                    owner_info: {
+                        owner_id: userId,
+                        first_name: "",
+                        last_name: ""
+                    },
+                    room_slug: 'home' + userId,
+                    created_at: moment().unix()
+                };
+                Message.create(createMessage, function(err, newMessage) {
+                    if (err) throw err;
+                    homeIo.in(userId).emit('messages/received', newMessage);
+                });
             }
         });
 
@@ -211,10 +237,12 @@ var ioEvents = function (io) {
 var helpers = {
     authorizeToken: function (token) {
         var decoded = false;
-        try {
-            decoded = jwt.verify(token, Constants.secret);
-        } catch (err) {
-            console.log(err);
+        if (token!="") {
+            try {
+                decoded = jwt.verify(token, Constants.secret);
+            } catch (err) {
+                console.log(err);
+            }
         }
         return decoded;
     }
