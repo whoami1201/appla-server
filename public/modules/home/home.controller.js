@@ -9,8 +9,6 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     $scope.showCreateRoomForm = false;
     $scope.noRoomMessage = "";
 
-
-
     /**
      * JQUERY STUFFS
      */
@@ -38,11 +36,6 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     mSocket.forward('rooms/added', $scope);
     mSocket.forward('rooms/error', $scope);
     mSocket.forward('messages/received', $scope);
-
-    $scope.$on('messages/received', function(ev, data){
-        console.log("Message received");
-        console.log(data);
-    });
 
     $scope.$on('updateRoomList/added', function(ev, data) {
         $scope.rooms.push(data);

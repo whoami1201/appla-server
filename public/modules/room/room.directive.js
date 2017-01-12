@@ -25,8 +25,19 @@ angular.module('room.module')
                 scope.message = "";
 
                 roomSocket.forward('messages/received', scope);
+
                 scope.$on('messages/received', function(ev, message){
-                    scope.messages.push(message);
+                    var index = null;
+                    for (var i = 0; i < scope.messages.length; i++) {
+                        if (scope.messages[i].messageId == message.messageId) {
+                            index = i;
+                        }
+                    }
+                    if (index!= null) {
+                        scope.messages[index] = message;
+                    } else {
+                        scope.messages.push(message);
+                    }
                     scope.message = "";
                 });
 

@@ -10,8 +10,9 @@ var ioEvents = function (io) {
 
     var numUsers = 0;
 
-    var Message = require('./models/Message');
-    var Room = require('./models/Room');
+    var Message = require('./models/Message.js');
+    var Room = require('./models/Room.js');
+    var User = require('./models/User.js');
 
     var roomsIo = io.of('/rooms');
     var homeIo = io.of('/');
@@ -105,8 +106,12 @@ var ioEvents = function (io) {
 
         var token = socket.handshake.query.token || "";
         var decoded = helpers.authorizeToken(token);
+        var user;
         if (decoded!=false){
             var userId = decoded.userId;
+            User.findById(userId, function(err, newUser) {
+                user = newUser;
+            });
             socket.join(userId);
         }
 
@@ -168,24 +173,38 @@ var ioEvents = function (io) {
             }
         });
 
-        socket.on('messages/send', function (data) {
-            console.log(socket);
-            console.log(data);
+        socket.on('messages/send/incomplete', function (data) {
+            var message = {
+                messageId: data.messageId,
+                message: data.message,
+                owner_info: {
+                    owner_id: userId,
+                    first_name: user.first_name,
+                    last_name: user.last_name
+                },
+                room_slug: 'home' + userId,
+                created_at: moment().unix()
+            };
+            homeIo.in(userId).emit('messages/received', message);
+        });
+
+        socket.on('messages/send/complete', function (data) {
             if (decoded!= false) {
                 var createMessage = {
+                    messageId: data.messageId,
                     message: data.message,
                     owner_info: {
                         owner_id: userId,
-                        first_name: "",
-                        last_name: ""
+                        first_name: user.first_name,
+                        last_name: user.last_name
                     },
                     room_slug: 'home' + userId,
                     created_at: moment().unix()
                 };
                 Message.create(createMessage, function(err, newMessage) {
                     if (err) throw err;
-                    homeIo.in(userId).emit('messages/received', newMessage);
                 });
+                homeIo.in(userId).emit('messages/received', createMessage);
             }
         });
 
