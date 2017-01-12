@@ -7,7 +7,7 @@ room-item .title {
 }
 
 room-item .title:hover {
-    color: #FF5722 !important;
+    color: rgba(255, 87, 34, 0.7) !important;
     cursor: pointer;
 }
 
@@ -141,5 +141,7 @@ room-item {
     }
 }
 
-
-
+.say-something {
+    margin-top: calc(25% - 10px);
+    margin-bottom: calc(25% - 10px);
+}

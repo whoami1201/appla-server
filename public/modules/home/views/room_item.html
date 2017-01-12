@@ -3,7 +3,7 @@
     <div class="row" style="margin-top: 15px;">
         <div class="row">
             <div class="col s6">
-                <span class="red-text text-darken-4 title" ng-click="joinRoom(room.slug)">{{room.room_name}}</span>
+                <span class="deep-orange-text text-darken-3 title" ng-click="joinRoom(room.slug)">{{room.room_name}}</span>
             </div>
             <div class="grey-text col offset-s2 s4">
                 {{ room.created_at  | amFromUnix | amDateFormat:'HH:mm - DD MMM, YYYY'}}
@@ -13,7 +13,7 @@
             <div class="grey-text text-darken-2 description truncate">{{room.description}}</div>
         </div>
         <div class="col push-s1 s3" ng-show="room.owner_id == user.user_id">
-            <a href="#" class="remove-room red-text text-lighten-2" ng-click="deleteRoom(room._id)">Remove</a>
+            <a href="#" class="remove-room deep-orange-text text-lighten-1" ng-click="deleteRoom(room._id)">Remove</a>
         </div>
     </div>
 </li>
