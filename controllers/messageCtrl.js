@@ -27,7 +27,7 @@ var messages = {
     getOne: function (req, res) {
         Message.findById(req.params.msgId, function (err, result) {
             if (err)
-                return res.json({ success: false, message: "MESSAGE_GET_ERROR"});
+                return res.json({ success: false, message: "MESSAGE_GET_ONE_ERROR"});
             else
                 return res.json({ success: true, data: result });
         });
@@ -37,13 +37,23 @@ var messages = {
     getMessagesByRoom: function(req, res){
         Message.findByRoomSlug(req.params.roomSlug, function(err, result){
             if (err)
-                return res.json({ success: false, message: "MESSAGE_GET_ERROR"});
+                return res.json({ success: false, message: "MESSAGE_GET_MESSAGE_BY_ROOM_ERROR"});
             else
                 return res.json({ success: true, messages: result});
         });
     },
 
-
+    getHomeMessages: function(req, res){
+        var userId = req.decoded.userId;
+        Message.findByRoomSlug("home"+ userId, function(err, result){
+            if (err) {
+                console.log(err);
+                return res.json({ success: false, message: "MESSAGE_GET_ERROR"});
+            }
+            else
+                return res.json({ success: true, message: result});
+        })
+    },
     /**
      * POST /messages
      *

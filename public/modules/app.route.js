@@ -10,7 +10,7 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, $loca
                 },
                 promisedUser: ['$http', '$window', function($http, $window) {
                     return $http.get('/api/users/getCurrentUser', {
-                        headers: { "x-access-token": $window.localStorage.accessToken}
+                        headers: { "x-access-token": $window.localStorage.accessToken }
                     });
                 }],
                 promisedRooms: ['$http', '$window', function($http, $window) {
@@ -18,6 +18,11 @@ angular.module('app').config(function ($stateProvider, $urlRouterProvider, $loca
                         headers: { "x-access-token": $window.localStorage.accessToken }
                     });
 
+                }],
+                promisedMessages: ['$http', '$window', function($http, $window) {
+                    return $http.get('/api/messages/getHomeMessages', {
+                        headers: { "x-access-token": $window.localStorage.accessToken }
+                    })
                 }]
             },
             controller: HomeController

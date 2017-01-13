@@ -1,6 +1,8 @@
-angular.module('home.module').controller('HomeController', ['$window', 'promisedUser', 'promisedRooms','$scope', 'mSocket', 'roomSocket','$document', 'HomeService', 'AuthService', HomeController]);
+angular.module('home.module').controller('HomeController', ['$window', 'promisedMessages','promisedUser', 'promisedRooms',
+    '$scope', 'mSocket', 'roomSocket','$document', 'HomeService', 'AuthService', HomeController]);
 
-function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, roomSocket, $document, HomeService, AuthService) {
+function HomeController($window, promisedMessages, promisedUser, promisedRooms,
+                        $scope, mSocket, roomSocket, $document, HomeService, AuthService) {
     $scope.signOut = signOut;
     $scope.toggleCreateRoomForm = toggleCreateRoomForm;
     $scope.rooms = [];
@@ -8,6 +10,8 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     $scope.user = [];
     $scope.showCreateRoomForm = false;
     $scope.noRoomMessage = "";
+
+    var MAX_MESSAGES_LENGTH = 10;
 
     /**
      * JQUERY STUFFS
@@ -70,6 +74,25 @@ function HomeController($window, promisedUser, promisedRooms, $scope, mSocket, r
     function init() {
         getAllRooms();
         getUser();
+        getMessages();
+    }
+
+    function getMessages() {
+        if (promisedMessages.data.success){
+            var index = 0;
+            var messages = promisedMessages.data.message;
+            if (messages.length > MAX_MESSAGES_LENGTH) {
+                for (var i=messages.length-1;i>=messages.length-MAX_MESSAGES_LENGTH;i--) {
+                    $scope.messages[index] = messages[i];
+                    index++;
+                }
+            } else {
+                $scope.messages = messages;
+            }
+
+        } else {
+            $scope.messages = [];
+        }
     }
 
     /**

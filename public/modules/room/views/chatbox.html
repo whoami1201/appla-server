@@ -2,7 +2,7 @@
     <div class="col s12 deep-orange-text text-darken-3 center-align say-something" ng-hide="messages.length > 0">
         Try saying something on your phone!
     </div>
-    <div class="col s12" ng-repeat="message in messages" ng-show="messages.length > 0">
+    <div class="col s12" ng-repeat="message in messages | orderBy:'created_at'" ng-show="messages.length > 0">
         <div class="row">
             <div class="col m4 right-align hide-on-small-and-down username text-accent-1">
                 <div class="col m12">
