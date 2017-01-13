@@ -142,6 +142,7 @@ room-item {
 }
 
 .say-something {
+    line-height: 30px;
     margin-top: calc(25% - 10px);
     margin-bottom: calc(25% - 10px);
 }
