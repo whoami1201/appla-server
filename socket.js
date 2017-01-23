@@ -24,7 +24,16 @@ var ioEvents = function (io) {
     roomsIo.on('connection', function (socket) {
         var roomSlug = "";
         var userId = "";
-
+        var roomId = "";
+        var user;
+        var token = socket.handshake.query.token || "";
+        var decoded = helpers.authorizeToken(token);
+        if (decoded!=false){
+            userId = decoded.userId;
+            User.findById(userId, function(err, newUser) {
+                user = newUser;
+            });
+        }
         /**
          * JOIN ROOM
          * socket: rooms/join
@@ -41,6 +50,7 @@ var ioEvents = function (io) {
                 } else {
                     Room.addUser(room, userId, socket.id, function (err, newRoom) {
                         if (err) throw err;
+                        roomId = newRoom._id;
                         socket.join(newRoom._id);
                         Room.getUsers(newRoom, userId, function (err, users, countUserInRoom) {
                             if (err) throw err;
@@ -79,6 +89,45 @@ var ioEvents = function (io) {
                 }
             });
 
+        });
+
+
+        socket.on('messages/send/incomplete', function (data) {
+            var message = {
+                messageId: data.messageId,
+                message: data.message,
+                owner_info: {
+                    owner_id: userId,
+                    first_name: user.first_name,
+                    last_name: user.last_name
+                },
+                room_slug: roomSlug,
+                created_at: moment().unix()
+            };
+            console.log("incomplete");
+            console.log(data);
+            console.log("roomId" + roomId);
+            roomsIo.in(roomId).emit('messages/received', message);
+        });
+
+        socket.on('messages/send/complete', function (data) {
+            var createMessage = {
+                messageId: data.messageId,
+                message: data.message,
+                owner_info: {
+                    owner_id: userId,
+                    first_name: user.first_name,
+                    last_name: user.last_name
+                },
+                room_slug: roomSlug,
+                created_at: moment().unix()
+            };
+            Message.create(createMessage, function(err, newMessage) {
+                if (err) throw err;
+            });
+            console.log("completed");
+            console.log(createMessage);
+            roomsIo.in(roomId).emit('messages/received', createMessage);
         });
 
         socket.on('disconnect', function () {
