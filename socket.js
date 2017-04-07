@@ -131,6 +131,7 @@ var ioEvents = function (io) {
         });
 
         socket.on('disconnect', function () {
+            console.log("DISCONNECTED!");
             Room.findOne({slug: roomSlug}, function (err, room) {
                 if (err) throw err;
                 if (!room) {
@@ -255,50 +256,6 @@ var ioEvents = function (io) {
                 });
                 homeIo.in(userId).emit('messages/received', createMessage);
             }
-        });
-
-
-        /**
-         * NEW CHAT MESSAGE
-         */
-
-        // TODO: Split chat message to rooms
-        socket.on('chat message', function (msg) {
-            var newMessage = new Message({
-                username: socket.username,
-                message: msg
-            });
-            newMessage.save(function (err) {
-                if (err) throw err;
-                io.emit('chat message', {
-                    message: msg,
-                    username: socket.username
-                });
-            })
-        });
-
-
-        /**
-         * NEW USER LOG IN
-         */
-        // TODO: Only show notification in rooms
-        socket.on('add user', function (username) {
-            if (addedUser) return;
-
-            // we store the username in the socket session for this client
-            if (username != "")
-                socket.username = username;
-            else
-                socket.username = 'annonymous';
-            addedUser = true;
-            socket.emit('login', {
-                numUsers: numUsers
-            });
-            // echo globally (all clients) that a person has connected
-            socket.broadcast.emit('user joined', {
-                username: socket.username,
-                numUsers: numUsers
-            });
         });
 
     })
